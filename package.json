@@ -1,0 +1,29 @@
+{
+  "name": "algocode-evaluate-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "prebuild": "npx eslint . --fix",
+    "prestart": "npx run build",
+    "watch": "npx tsc -w",
+    "start": "npx nodemon dist/index.js",
+    "dev": "npx concurrently --kill-others \"npm run watch\" \"npm start\""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "nodemon": "^3.1.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
+    "express": "^4.19.2"
+  }
+}
