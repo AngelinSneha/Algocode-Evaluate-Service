@@ -1,0 +1,2 @@
+- This Project Integrates **Redis** Message Blocker which helps in handling all the submissions made by [Algocode-Problem-Solving](https://github.com/AngelinSneha/AlgoCode-problem-solving) Service
+- Each Code Submission is added inside the message Queue and these requests would be proccessed based on priority.
