@@ -6,7 +6,7 @@
   "scripts": {
     "prebuild": "npx eslint . --fix",
     "build": "npx tsc",
-    "prestart": "npx run build",
+    "prestart": "npm run build",
     "watch": "npx tsc -w",
     "start": "npx nodemon dist/index.js",
     "dev": "npx concurrently --kill-others \"npm run watch\" \"npm start\""
