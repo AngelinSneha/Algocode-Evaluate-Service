@@ -1,5 +1,6 @@
 import { Job } from "bullmq";
 
+import logger from "../config/loggerConfig";
 import { IJob } from "../types/bullMqJobDefinition";
 
 export default class SampleJob implements IJob {
@@ -12,7 +13,7 @@ export default class SampleJob implements IJob {
     }
 
     handle = (job?: Job) => {
-        console.log('Handler of the job called', this.payload);
+        logger.info('Handler of the job called');
         if (job) {
             console.log(job.name, job.id, job.data);
         }
