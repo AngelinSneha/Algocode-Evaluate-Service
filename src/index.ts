@@ -4,6 +4,7 @@ import express, { Express } from "express";
 import bullBoardAdapter from "./config/bullBoardConfig";
 import logger from "./config/loggerConfig";
 import serverConfig from "./config/serverConfig";
+import runPython from './containers/runPythonDocker';
 import sampleQueueProducer from "./producers/sampleQueueProducer";
 import apiRouter from "./routes";
 import SampleWorker from "./workers/SampleWorker";
@@ -34,4 +35,11 @@ app.listen(serverConfig.PORT, () => {
         name: "Demo 2",
         working: false
     }, 1);
+// sample input
+    const code = `x = input()
+print("value of x is", x)
+for i in range(int(x)):
+    print(i)
+`;
+    runPython(code, "100");
 });
