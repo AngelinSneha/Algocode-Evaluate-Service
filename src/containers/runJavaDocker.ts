@@ -1,31 +1,29 @@
 // import Docker from "dockerode";
 
 // import { TestCases } from "../types/testCases";
-import { PYTHON_IMAGE } from "../utils/constants";
+import { JAVA_IMAGE } from "../utils/constants";
 import createContainer from "./containerFactory";
 import decodeDockerStream from "./dockerHelper";
 import pullImage from "./pullImage";
 
 const rawLogBuffer: Buffer[] = [];
 
-// docker for python code
-async function runPython(code:string, inputTestCase: string) {
-    console.log('Initializing a new python docker container');
-    await pullImage(PYTHON_IMAGE);
-    const runCommand= `echo '${code.replace(/'/g, `'\\"`)}' > test.py && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | python3 test.py`;
+// docker for Java code
+async function runJava(code:string, inputTestCase: string) {
+    console.log('Initializing a new java docker container');
+    await pullImage(JAVA_IMAGE);
+    // store the code in Main.java file and compiler the code (javac Main.java) to get byte code, now get the input test cases and then run the byte code (java Main)
+    const runCommand= `echo '${code.replace(/'/g, `'\\"`)}' > Main.java && javac Main.java && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | java Main`;
 
-    // const pythonDockerContainer = await createContainer(PYTHON_IMAGE, 
-    //     ['python3', '-c', code, 'stty -echo']
-    // );
-    const pythonDockerContainer = await createContainer(PYTHON_IMAGE, 
+    const javaDockerContainer = await createContainer(JAVA_IMAGE, 
         ['/bin/sh', '-c',runCommand]
     );
-    // starting/booting the corresponding python docker container
-    await pythonDockerContainer.start();
+    // starting/booting the corresponding java docker container
+    await javaDockerContainer.start();
 
     console.log('Started the docker container');
 
-    const loggerStream = await pythonDockerContainer.logs({
+    const loggerStream = await javaDockerContainer.logs({
         stdout: true,
         stderr: true,
         timestamps: false,
@@ -37,6 +35,13 @@ async function runPython(code:string, inputTestCase: string) {
     //  type of these Bytes is Buffer
     loggerStream.on('data', (chunk)=>{
         rawLogBuffer.push(chunk);
+    });
+    loggerStream.on('end', ()=>{
+        console.log('end: ', rawLogBuffer);
+        // concat all chunks in buffer array
+        const completeBuffer = Buffer.concat(rawLogBuffer);
+        const decodedStream = decodeDockerStream(completeBuffer);
+        console.log(decodedStream);
     });
     await new Promise((res)=>{
         loggerStream.on('end', ()=>{
@@ -50,8 +55,8 @@ async function runPython(code:string, inputTestCase: string) {
         });
     });
 
-    // remove python container
-    await pythonDockerContainer.remove();
+    // remove java container
+    await javaDockerContainer.remove();
 }
 
-export default runPython;
+export default runJava;

@@ -4,7 +4,7 @@ import express, { Express } from "express";
 import bullBoardAdapter from "./config/bullBoardConfig";
 import logger from "./config/loggerConfig";
 import serverConfig from "./config/serverConfig";
-import runPython from './containers/runPythonDocker';
+import runCPP from './containers/runCppDocker';
 import sampleQueueProducer from "./producers/sampleQueueProducer";
 import apiRouter from "./routes";
 import SampleWorker from "./workers/SampleWorker";
@@ -35,11 +35,44 @@ app.listen(serverConfig.PORT, () => {
         name: "Demo 2",
         working: false
     }, 1);
-// sample input
-    const code = `x = input()
-print("value of x is", x)
-for i in range(int(x)):
-    print(i)
+
+// sample input python
+//     const code = `x = input()
+// print("value of x is", x)
+// for i in range(int(x)):
+//     print(i)
+// `;
+
+// sample input java
+// const code = `
+// import java.util.*;
+// public class Main {
+//     public static void main(String[] args) {
+//         Scanner sc = new Scanner(System.in);
+//         int input = sc.nextInt();
+//         System.out.println("Input value given by the user: " + input);
+//         for(int i = 0; i < input; i++) {
+//             System.out.println(i);
+//         }
+//     }
+// }
+// `;
+
+// sample input CPP
+const code = `
+#include<iostream>
+using namespace std;
+
+int main() {
+    int x;
+    cin>>x;
+    cout<<"Input value given by the user is "<<x<<endl;
+    for(int i = 0; i < x; i++) {
+        cout<<i << " ";
+    }
+    cout<<endl;
+    return 0;
+}
 `;
-    runPython(code, "100");
+    runCPP(code, "100");
 });

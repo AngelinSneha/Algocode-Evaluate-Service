@@ -1,4 +1,7 @@
+// docker pull python:3.8-slim, openjdk:11-jdk-slim, gcc:latest
 export const PYTHON_IMAGE = "python:3.8-slim";
+export const JAVA_IMAGE = "openjdk:11-jdk-slim";
+export const CPP_IMAGE = "gcc:latest";
 
 // size of header in docker stream
 // docker stream header will contain data about type of stream i.e. stdout/stderr (4 Bytes)
