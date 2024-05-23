@@ -4,10 +4,11 @@ import express, { Express } from "express";
 import bullBoardAdapter from "./config/bullBoardConfig";
 import logger from "./config/loggerConfig";
 import serverConfig from "./config/serverConfig";
-import runCPP from './containers/runCppDocker';
-import sampleQueueProducer from "./producers/sampleQueueProducer";
+import submissionQueueProducer from './producers/submissionQueueProducer';
 import apiRouter from "./routes";
+import { submission_queue } from './utils/constants';
 import SampleWorker from "./workers/SampleWorker";
+import SubmissionWorker from './workers/SubmissionWorker';
 
 const app: Express = express();
 
@@ -25,16 +26,17 @@ app.listen(serverConfig.PORT, () => {
 
     // consumer/worker calling the job
     SampleWorker('SampleQueue');
+    SubmissionWorker(submission_queue);
 
     //sample jobs - producer
-    sampleQueueProducer('SampleJob', {
-        name: "Demo 1",
-        working: true
-    }, 2);
-    sampleQueueProducer('SampleJob', {
-        name: "Demo 2",
-        working: false
-    }, 1);
+    // sampleQueueProducer('SampleJob', {
+    //     name: "Demo 1",
+    //     working: true
+    // }, 2);
+    // sampleQueueProducer('SampleJob', {
+    //     name: "Demo 2",
+    //     working: false
+    // }, 1);
 
 // sample input python
 //     const code = `x = input()
@@ -74,5 +76,12 @@ int main() {
     return 0;
 }
 `;
-    runCPP(code, "100");
+//     runCPP(code, "100");
+
+
+submissionQueueProducer({"1234":{
+    "language":"CPP",
+    "inputCase":"10",
+    code
+}});
 });

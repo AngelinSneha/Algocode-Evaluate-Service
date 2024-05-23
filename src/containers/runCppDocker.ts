@@ -46,7 +46,7 @@ async function runCPP(code:string, inputTestCase: string) {
         const decodedStream = decodeDockerStream(completeBuffer);
         console.log(decodedStream);
     });
-    await new Promise((res)=>{
+    const response = await new Promise((res)=>{
         loggerStream.on('end', ()=>{
             console.log('end: ', rawLogBuffer);
             // concat all chunks in buffer array
@@ -54,12 +54,13 @@ async function runCPP(code:string, inputTestCase: string) {
             const decodedStream = decodeDockerStream(completeBuffer);
             console.log(decodedStream);
             console.log(decodedStream.stdout);
-            res(decodeDockerStream);
+            res(decodedStream);
         });
     });
 
     // remove cpp container
     await cppDockerContainer.remove();
+    return response;
 }
 
 export default runCPP;
