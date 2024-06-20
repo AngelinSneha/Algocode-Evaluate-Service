@@ -1,9 +1,10 @@
 import { Job } from "bullmq";
 
 import logger from "../config/loggerConfig";
-import runCPP from "../containers/runCppDocker";
+import CodeExecuterStrategy, { ExecutionResponse } from "../types/CodeExecuterStrategy";
 import { IJob } from "../types/bullMqJobDefinition";
 import { SubmissionPayload } from "../types/submissionPayload";
+import createExecuter from "../utils/ExecuterFactory";
 
 export default class SubmissionJob implements IJob {
     name: string;
@@ -14,14 +15,22 @@ export default class SubmissionJob implements IJob {
         this.name = this.constructor.name;
     }
 
-    handle = async(job?: Job) => {
+    handle = async (job?: Job) => {
         logger.info('Handler of the job called');
         if (job) {
             const key = Object.keys(this.payload)[0];
-            console.log(this.payload[key].language);
-            if(this.payload[key].language == "CPP") {
-                const response = await runCPP(this.payload[key].code, this.payload[key].inputCase);
-                console.log("Evaluated res is ", response);
+            const codeLanguage = (this.payload[key].language);
+            const code = this.payload[key].code;
+            const inputTestCase = this.payload[key].inputCase;
+            const strategy = createExecuter(codeLanguage);
+            if (strategy !== null) {
+                const response: ExecutionResponse = await strategy.execute(code, inputTestCase);
+                if (response.status === "COMPLETED") {
+                    console.log("Code Executed Successfully", response);
+                } else {
+                    console.log("Something went wrong with code execution", response);
+                    logger.error("Something went wrong with code execution");
+                }
             }
         }
     };
