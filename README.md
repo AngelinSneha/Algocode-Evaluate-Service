@@ -4,7 +4,7 @@
 
 ## Overview
 
-Algocode-Evaluate-Service is responsible for evaluating code submissions from the Algocode-Problem-Solving service. It integrates Redis Message Blocker to manage and prioritize code submissions through a message queue. Each submission runs in a Docker container for isolated execution and security.
+Algocode-Evaluate-Service is responsible for evaluating code submissions from the [Algocode-Submission-Service](https://github.com/AngelinSneha/Algocode-Submission-Service). This service is connected to the **Algocode-Submission-Service** using Redis Queue to facilitate asynchronous communication. This setup allows for efficient handling of job submissions and ensures scalability and reliability in processing tasks. Each submission runs in a Docker container for isolated execution and security.
 
 ---
 
