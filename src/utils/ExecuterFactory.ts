@@ -6,11 +6,11 @@ import CodeExecuterStrategy from "../types/CodeExecuterStrategy";
 export default function createExecuter(codeLanguage: string): CodeExecuterStrategy | null {
     switch (codeLanguage) {
         case "PYTHON":
-            return new pythonExecuter()
+            return new pythonExecuter();
         case "CPP":
-            return new cppExecuter()
+            return new cppExecuter();
         case "JAVA":
-            return new javaExecuter()
+            return new javaExecuter();
         default:
             return null;
     }

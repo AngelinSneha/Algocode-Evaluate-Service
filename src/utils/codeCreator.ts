@@ -5,6 +5,6 @@ ${startingCode}
 ${middleCode}
 
 ${endCode}
-`
+`;
 }
 // for python and java, endCode can be passed as empty string

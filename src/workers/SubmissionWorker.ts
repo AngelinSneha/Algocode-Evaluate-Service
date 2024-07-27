@@ -11,7 +11,7 @@ export default function SubmissionWorker(queueName: string) {
             logger.info('Submission Job worker called');
             if (job.name == "SubmissionJob") {
                 const submissionJobInstance = new SubmissionJob(job.data);
-
+                console.log('Calling Job handler')
                 submissionJobInstance.handle(job);
 
                 return true;

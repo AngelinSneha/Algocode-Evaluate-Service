@@ -11,8 +11,8 @@ const rawLogBuffer: Buffer[] = [];
 
 // docker for CPP code
 class cppExecuter implements CodeExecuterStrategy {
-    async execute(code: string, inputTestCase: string): Promise<ExecutionResponse> {
-        console.log('Initializing a new cpp docker container');
+    async execute(code: string, inputTestCase: string, outputTestCase: string): Promise<ExecutionResponse> {
+        console.log('Initializing a new cpp docker container', outputTestCase);
         await pullImage(CPP_IMAGE);
         // store the code in main.cpp file and compiler the code (g++ main.cpp -o main) to get byte code, now get the input test cases and then run the byte code (stdbuf -oL -eL ./main)
         // option 1: Buffer has to be flushed - stdbuf: - chnage the buffering of the ip & op, oL: sets stdout to line buffer, eL: sets stderr to line buffer
@@ -51,7 +51,7 @@ class cppExecuter implements CodeExecuterStrategy {
 
         try {
             const codeResponse = await fetchDecodedStream(loggerStream, rawLogBuffer);
-            return { output: codeResponse as string, status: "COMPLETED" }
+            return { output: codeResponse as string, status: "COMPLETED" };
         } catch (error) {
 
             return { output: error as string, status: "ERROR" };

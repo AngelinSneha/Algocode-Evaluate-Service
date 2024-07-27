@@ -8,10 +8,7 @@
         "sourceType": "module"
     },
     "rules": {
-        "semi": [
-            "error",
-            "always"
-        ],
+        "semi": "off",
         "no-unused-vars": "off",
         "simple-import-sort/imports": "error",
         "simple-import-sort/exports": "error"

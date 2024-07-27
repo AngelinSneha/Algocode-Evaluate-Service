@@ -4,15 +4,15 @@
 import CodeExecuterStrategy, { ExecutionResponse } from "../types/CodeExecuterStrategy";
 import { PYTHON_IMAGE } from "../utils/constants";
 import createContainer from "./containerFactory";
-import { decodeDockerStream, fetchDecodedStream } from "./dockerHelper";
+import { fetchDecodedStream } from "./dockerHelper";
 import pullImage from "./pullImage";
 
 const rawLogBuffer: Buffer[] = [];
 
 // docker for python code
 class pythonExecuter implements CodeExecuterStrategy {
-    async execute(code: string, inputTestCase: string): Promise<ExecutionResponse> {
-        console.log('Initializing a new python docker container');
+    async execute(code: string, inputTestCase: string, outputTestCase: string): Promise<ExecutionResponse> {
+        console.log('Initializing a new python docker container', outputTestCase);
         await pullImage(PYTHON_IMAGE);
         const runCommand = `echo '${code.replace(/'/g, `'\\"`)}' > test.py && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | python3 test.py`;
 
@@ -43,7 +43,7 @@ class pythonExecuter implements CodeExecuterStrategy {
         try {
 
             const codeResponse = await fetchDecodedStream(loggerStream, rawLogBuffer);
-            return { output: codeResponse as string, status: "COMPLETED" }
+            return { output: codeResponse as string, status: "COMPLETED" };
         } catch (error) {
 
             return { output: error as string, status: "ERROR" };

@@ -12,8 +12,8 @@ const rawLogBuffer: Buffer[] = [];
 
 // docker for Java code
 class javaExecuter implements CodeExecuterStrategy {
-    async execute(code: string, inputTestCase: string): Promise<ExecutionResponse> {
-        console.log('Initializing a new java docker container');
+    async execute(code: string, inputTestCase: string, outputTestCase: string): Promise<ExecutionResponse> {
+        console.log('Initializing a new java docker container', outputTestCase);
         await pullImage(JAVA_IMAGE);
         // store the code in Main.java file and compiler the code (javac Main.java) to get byte code, now get the input test cases and then run the byte code (java Main)
         const runCommand = `echo '${code.replace(/'/g, `'\\"`)}' > Main.java && javac Main.java && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | java Main`;
@@ -49,7 +49,7 @@ class javaExecuter implements CodeExecuterStrategy {
 
         try {
             const codeResponse = await fetchDecodedStream(loggerStream, rawLogBuffer);
-            return { output: codeResponse as string, status: "COMPLETED" }
+            return { output: codeResponse as string, status: "COMPLETED" };
         } catch (error) {
 
             return { output: error as string, status: "ERROR" };

@@ -43,13 +43,12 @@ async function fetchDecodedStream(loggerStream: NodeJS.ReadableStream, rawLogBuf
             console.log(decodedStream);
             console.log(decodedStream.stdout);
             if (decodedStream.stderr) {
-                rej(decodedStream.stderr)
+                rej(decodedStream.stderr);
             } else
                 res(decodedStream.stdout);
         });
     });
 }
 export {
-    fetchDecodedStream,
-    decodeDockerStream
-}
+    decodeDockerStream,
+    fetchDecodedStream};
