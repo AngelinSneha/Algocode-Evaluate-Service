@@ -12,6 +12,9 @@ async function createContainer(imageName:string, cmdExecutable:string[]) {
         AttachStdout:true, // to enable o/p streams
         AttachStderr:true, // to enable error streams
         Tty:false,
+        HostConfig:{
+            Memory: 1024 * 1024 * 512 // 512MB
+        },
         OpenStdin: true // keep the i/p stream open even no interaction is there
     });
     return container;

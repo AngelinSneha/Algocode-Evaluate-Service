@@ -33,11 +33,17 @@ function decodeDockerStream(buffer: Buffer): DockerStreamOutput {
     }
     return output;
 }
-async function fetchDecodedStream(loggerStream: NodeJS.ReadableStream, rawLogBuffer: Buffer[]) {
+async function fetchDecodedStream(loggerStream: NodeJS.ReadableStream, rawLogBuffer: Buffer[]): Promise<string> {
+
     return await new Promise((res, rej) => {
+        const timeout = setTimeout(() => {
+            console.log("Timeout Called");
+            rej('Time Limit Exceeded');
+        }, 2000); //take time limit for each language
         loggerStream.on('end', () => {
             console.log('end: ', rawLogBuffer);
             // concat all chunks in buffer array
+            clearTimeout(timeout)
             const completeBuffer = Buffer.concat(rawLogBuffer);
             const decodedStream = decodeDockerStream(completeBuffer);
             console.log(decodedStream);
@@ -51,4 +57,5 @@ async function fetchDecodedStream(loggerStream: NodeJS.ReadableStream, rawLogBuf
 }
 export {
     decodeDockerStream,
-    fetchDecodedStream};
+    fetchDecodedStream
+};

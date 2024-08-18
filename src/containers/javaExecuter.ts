@@ -48,10 +48,16 @@ class javaExecuter implements CodeExecuterStrategy {
         });
 
         try {
-            const codeResponse = await fetchDecodedStream(loggerStream, rawLogBuffer);
-            return { output: codeResponse as string, status: "COMPLETED" };
+            const codeResponse: string = await fetchDecodedStream(loggerStream, rawLogBuffer);
+            if (codeResponse.trim() === outputTestCase.trim()) {
+                return { output: codeResponse as string, status: "SUCCESS" };
+            } else {
+                return { output: codeResponse as string, status: "WA" };
+            }
         } catch (error) {
-
+            if (error === "Time Limit Exceeded") {
+                await javaDockerContainer.kill()
+            }
             return { output: error as string, status: "ERROR" };
         } finally {
             // remove java container
